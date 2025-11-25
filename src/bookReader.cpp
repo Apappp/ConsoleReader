@@ -1,0 +1,83 @@
+#include "../include/bookReader.h"
+
+BookReader::BookReader() {};
+
+void BookReader::show(){
+    std::cout << "\033[H\033[2J" << std::flush;
+    std::cout << " ------ " << title << " ------ \n" << std::endl;
+    if(getBook()){
+        std::cout << lines << std::endl;
+    }
+    else{
+        std::cout << "Something went wrong...";
+    }
+    std::cin >> title;
+}
+
+bool BookReader::getBook(){
+    lines = books[title];
+    if((lines == "")||(lines[0]=='{')){
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+void BookReader::searchBook(){
+    std::cout << "\033[H\033[2J" << std::flush;
+    std::cout << " ------ Search ------ " << std::endl;
+    std::cout << " Your query: ";
+    std::string query;
+    std::cin >> query;
+    searching(query);
+    Menu resultsMenu("search_temp");
+    std::vector<std::string> items = resultsMenu.getItems();
+    int choice = resultsMenu.choose();
+    if(choice<(items.size()-1)){
+        title = items[choice-1];
+        show();
+    }
+    else if(choice==(items.size()-1)){
+        searchBook();
+    }
+}
+
+void BookReader::searching(std::string query){
+    int poemCount = 10;
+    RestClient::init();    
+    RestClient::Response r2 = RestClient::get("https://poetrydb.org/title,poemcount/" + query + ";" + std::to_string(poemCount) + "/title,lines.text");
+    std::ofstream results("../menus/search_temp");
+    std::istringstream stream(r2.body);
+    std::string line;
+    results << "Results" << std::endl;
+    bool sw = false;
+    
+    while(std::getline(stream, line)){
+        if(sw){
+            if(!((line == "title")||(line == "lines"))){
+                title = line;
+                results << line << std::endl;
+            }
+            if(line == "lines"){
+                sw = false;
+            }
+        }
+        else{
+            if(!((line == "title")||(line == "lines"))){
+                lines = lines + "\n" + line;
+            }
+            if(line == "title"){
+                books[title] = lines;
+                lines = "";
+                sw = true;
+            }
+        }
+        
+    }
+    books[title] = lines;
+    lines = "";
+    results << "Search again\nReturn to main Menu";
+    results.close();
+
+}
