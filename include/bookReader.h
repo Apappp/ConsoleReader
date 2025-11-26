@@ -11,11 +11,12 @@
 
 class BookReader{
     private:
+    std::string username;
     std::string title;
     std::string lines;
     std::map<std::string, std::string> books;
     public:
-    BookReader();
+    BookReader(std::string username);
     void show();
     bool getBook();
     void searchBook();

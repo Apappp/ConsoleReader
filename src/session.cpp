@@ -69,6 +69,6 @@ void Session::getFavorites(){
 }
 
 void Session::search(){
-    BookReader req;
+    BookReader req(user);
     req.searchBook();
 }

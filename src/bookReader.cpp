@@ -1,17 +1,23 @@
 #include "../include/bookReader.h"
 
-BookReader::BookReader() {};
+BookReader::BookReader(std::string username) : username(username){}
 
 void BookReader::show(){
     std::cout << "\033[H\033[2J" << std::flush;
     std::cout << " ------ " << title << " ------ \n" << std::endl;
+    std::string setFavorite;
     if(getBook()){
         std::cout << lines << std::endl;
+        std::cout << "\nType f to add poem to favorites, type anything else to exit: ";
+        std::cin >> setFavorite;
+        if(setFavorite == "f"){
+            
+        }
     }
     else{
         std::cout << "Something went wrong...";
+        std::cin >> setFavorite;
     }
-    std::cin >> title;
 }
 
 bool BookReader::getBook(){
