@@ -11,12 +11,34 @@ void BookReader::show(){
         std::cout << "\nType f to add poem to favorites, type anything else to exit: ";
         std::cin >> setFavorite;
         if(setFavorite == "f"){
-            
+            addFavorites();
         }
     }
     else{
         std::cout << "Something went wrong...";
         std::cin >> setFavorite;
+    }
+}
+
+void BookReader::addFavorites(){
+    InterpretFile f("secret_data/favorites");
+    std::vector<std::string> rows = f.simpleVector();
+    std::ofstream favFile("../secret_data/favorites");
+    bool isFound = false;
+    if(favFile.is_open()){
+        for(int i = 0; i < rows.size(); i++){
+            if(rows[i]==username){
+                rows[i+1] = rows[i+1] + "%" + title;
+                isFound = true;
+                for (std::string row : rows){
+                    favFile << row << std::endl;
+                }
+            }
+        }
+        if(!isFound){
+            rows.push_back(username);
+            rows.push_back(title);
+        }
     }
 }
 

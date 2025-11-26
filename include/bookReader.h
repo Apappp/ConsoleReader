@@ -21,6 +21,7 @@ class BookReader{
     bool getBook();
     void searchBook();
     void searching(std::string query);
+    void addFavorites();
 };
 
 #endif
