@@ -40,14 +40,11 @@ void Session::favorites(){
 void Session::getFavorites(){
     InterpretFile f("secret_data/favorites");
     std::map<int, std::vector<std::string>> records = f.getRecords(2);
-    std::string rawFavs;
+    std::string rawFavs = "";
     for (auto record : records){
         if(user==record.second[0]){
             rawFavs = record.second[1];
         }
-    }
-    if(rawFavs == ""){
-        std::cout << " You don't have any favorite books.";
     }
     std::ofstream favFile("../menus/fav_temp");
     if(!favFile.is_open()){
@@ -63,12 +60,15 @@ void Session::getFavorites(){
                 favFile << a;
             }
         }
+        if(rawFavs == ""){
+            favFile << "You don't have any favorite books.";
+        }
         favFile << std::endl << "Return to main menu";
     }
     favFile.close();
 }
 
 void Session::search(){
-    BookReader req;
+    BookReader req(user);
     req.searchBook();
 }
