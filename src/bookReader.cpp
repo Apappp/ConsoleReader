@@ -30,14 +30,14 @@ void BookReader::addFavorites(){
             if(rows[i]==username){
                 rows[i+1] = rows[i+1] + "%" + title;
                 isFound = true;
-                for (std::string row : rows){
-                    favFile << row << std::endl;
-                }
             }
         }
         if(!isFound){
             rows.push_back(username);
             rows.push_back(title);
+        }
+        for (std::string row : rows){
+            favFile << row << std::endl;
         }
     }
 }
